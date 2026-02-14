@@ -4,13 +4,23 @@ import java.util.List;
 
 public class Animal {
 
+    public Animal(String animalType) {
+    }
+
     public List<String> getFood(String animalKind) throws Exception {
-        if ("Травоядное".equals(animalKind)) {
-            return List.of("Трава", "Различные растения");
-        } else if ("Хищник".equals(animalKind)) {
-            return List.of("Животные", "Птицы", "Рыба");
-        } else {
-            throw new Exception("Неизвестный вид животного, используйте значение Травоядное или Хищник");
+        if (animalKind == null) {
+            throw new Exception("Некорректный тип животного");
+        }
+        if (animalKind.isEmpty()) {
+            throw new Exception("Некорректный тип животного");
+        }
+        switch (animalKind) {
+            case "Травоядное":
+                return List.of("Трава", "Различные растения");
+            case "Хищник":
+                return List.of("Мясо");
+            default:
+                throw new Exception("Неизвестный тип животного");
         }
     }
 
