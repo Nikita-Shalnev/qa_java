@@ -10,7 +10,7 @@ public class CatTest {
     @Test
     public void testGetFoodReturnsResultFromEatMeat() throws Exception {
         Feline mockFeline = mock(Feline.class);
-        List<String> expectedFood = List.of("Рыба", "Молоко");
+        List<String> expectedFood = List.of("Животные", "Птицы", "Рыба");
         when(mockFeline.eatMeat()).thenReturn(expectedFood);
 
         Cat cat = new Cat(mockFeline);
