@@ -3,25 +3,24 @@ import com.example.Feline;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(Parameterized.class)
 public class LionTest {
 
-    private String sex;
-    private boolean expectedMane;
+    private final String sex;
+    private final boolean expectedMane;
 
     public LionTest(String sex, boolean expectedMane) {
         this.sex = sex;
         this.expectedMane = expectedMane;
     }
 
-    @Parameterized.Parameters(name = "Тестовые данные: пол={0}, ожидаемая грива={1}")
+    @Parameterized.Parameters(name = "Пол: {0}, ожидаемая грива: {1}")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"Самец", true},
@@ -30,27 +29,31 @@ public class LionTest {
     }
 
     @Test
-    public void testLionConstructorAndGetFood() throws Exception {
-        // Мокаем Feline
+    public void testDoesHaveManeReturnsCorrectValue() throws Exception {
         Feline mockFeline = mock(Feline.class);
-        when(mockFeline.getFood()).thenReturn(Arrays.asList("Мясо"));
-        // Создаем Льва через инъекцию
         Lion lion = new Lion(sex, mockFeline);
-        assertEquals(expectedMane, lion.hasMane());
-        List<String> food = lion.getFood();
-        assertEquals(Arrays.asList("Мясо"), food);
-        verify(mockFeline).getFood();
+        assertEquals(expectedMane, lion.doesHaveMane());
     }
+
     @Test
-    public void testHasManeReturnsCorrectValue () throws Exception {
-        Feline feline = mock(Feline.class);
+    public void testGetFoodReturnsResultFromFeline() throws Exception {
+        Feline mockFeline = mock(Feline.class);
+        List<String> expectedFood = List.of("Мясо");
+        when(mockFeline.getFood("Хищник")).thenReturn(expectedFood);
 
-        // Тест для самца
-        Lion lionMale = new Lion("Самец", feline);
-        assertTrue(lionMale.hasMane());
+        Lion lion = new Lion("Самец", mockFeline);
+        List<String> actualFood = lion.getFood();
 
-        // Тест для самки
-        Lion lionFemale = new Lion("Самка", feline);
-        assertFalse(lionFemale.hasMane());
+        assertEquals(expectedFood, actualFood);
+    }
+
+    @Test
+    public void testGetFoodCallsFelineGetFoodWithPredatorArgument() throws Exception {
+        Feline mockFeline = mock(Feline.class);
+        Lion lion = new Lion("Самец", mockFeline);
+
+        lion.getFood();
+
+        verify(mockFeline, times(1)).getFood("Хищник");
     }
 }

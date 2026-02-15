@@ -6,53 +6,56 @@ import static org.junit.Assert.*;
 public class AnimalTest {
 
     @Test
-    public void testGetFoodCorrectTypeHedge() throws Exception {
-        Animal animal = new Animal("Хищник");
-        assertEquals(List.of("Мясо"), animal.getFood("Хищник"));
+    public void testGetFoodForPredator() throws Exception {
+        Animal animal = new Animal();
+        List<String> food = animal.getFood("Хищник");
+        assertEquals(List.of("Животные", "Птицы", "Рыба"), food);
     }
 
     @Test
-    public void testGetFoodCorrectTypeHerbivore() throws Exception {
-        Animal animal = new Animal("Травоядное");
-        assertEquals(List.of("Трава", "Различные растения"), animal.getFood("Травоядное"));
+    public void testGetFoodForHerbivore() throws Exception {
+        Animal animal = new Animal();
+        List<String> food = animal.getFood("Травоядное");
+        assertEquals(List.of("Трава", "Различные растения"), food);
     }
 
     @Test
-    public void testGetFoodIncorrectType() {
-        Animal animal = new Animal("НекорректноеТип");
+    public void testGetFoodThrowsExceptionForUnknownKind() {
+        Animal animal = new Animal();
         try {
-            animal.getFood("НекорректноеТип");
-            fail("Expected Exception");
+            animal.getFood("Неизвестный");
+            fail("Expected exception");
         } catch (Exception e) {
-            assertEquals("Неизвестный тип животного", e.getMessage());
+            assertEquals("Неизвестный вид животного, используйте значение Травоядное или Хищник", e.getMessage());
         }
     }
 
     @Test
-    public void testGetFoodNullType() {
-        Animal animal = new Animal(null);
+    public void testGetFoodThrowsExceptionForNullKind() {
+        Animal animal = new Animal();
         try {
             animal.getFood(null);
-            fail("Expected Exception");
+            fail("Expected exception");
         } catch (Exception e) {
-            assertEquals("Некорректный тип животного", e.getMessage());
+            assertEquals("Неизвестный вид животного, используйте значение Травоядное или Хищник", e.getMessage());
         }
     }
 
     @Test
-    public void testGetFoodEmptyString() {
-        Animal animal = new Animal("");
+    public void testGetFoodThrowsExceptionForEmptyKind() {
+        Animal animal = new Animal();
         try {
             animal.getFood("");
-            fail("Expected Exception");
+            fail("Expected exception");
         } catch (Exception e) {
-            assertEquals("Некорректный тип животного", e.getMessage());
+            assertEquals("Неизвестный вид животного, используйте значение Травоядное или Хищник", e.getMessage());
         }
     }
+
     @Test
-    public void testGetFamilyString() {
-        Animal animal = new Animal("Любой тип");
-        String familyString = animal.getFamily();
-        assertEquals("Существует несколько семейств: заячьи, беличьи, мышиные, кошачьи, псовые, медвежьи, куньи", familyString);
+    public void testGetFamilyReturnsCorrectString() {
+        Animal animal = new Animal();
+        String family = animal.getFamily();
+        assertEquals("Существует несколько семейств: заячьи, беличьи, мышиные, кошачьи, псовые, медвежьи, куньи", family);
     }
 }
